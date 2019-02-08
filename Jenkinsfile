@@ -13,6 +13,16 @@ pipeline {
                 checkout scm
             }
         }
+        stage('rust') {
+            steps {
+                sh 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
+                sh 'source $HOME/.cargo/env'
+                sh 'rustc -V'
+                sh 'rustup -V'
+                sh 'rustup target add aarch64-apple-ios armv7-apple-ios armv7s-apple-ios x86_64-apple-ios i386-apple-ios'
+                sh 'cargo install cargo-lipo'
+            }
+        }
         stage('bootstrap') {
             steps {
                 sh '''carthage bootstrap --platform ios'''
